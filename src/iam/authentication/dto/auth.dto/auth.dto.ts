@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CmsLoginDto {
   @IsNotEmpty()
-  name: string;
+  email: string;
 
   @IsNotEmpty()
   password: string;

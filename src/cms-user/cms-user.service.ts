@@ -1,14 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateCmsUserDto } from './dto/create-cms-user.dto';
 import { UpdateCmsUserDto } from './dto/update-cms-user.dto';
 import { PrismaService } from '../prisma.service';
+import { HashingService } from '../iam/hashing/hashing.service';
 
 @Injectable()
 export class CmsUserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private hasingService: HashingService,
+  ) {}
 
-  create(createCmsUserDto: CreateCmsUserDto) {
-    return 'This action adds a new cmsUser';
+  async create(createCmsUserDto: CreateCmsUserDto) {
+    const { name, email, role, password } = createCmsUserDto;
+    try {
+      const cmsUser = await this.prisma.cmsUser.findUnique({
+        where: { email },
+      });
+
+      if (cmsUser) {
+        throw new BadRequestException('Duplicate User Account!');
+      }
+
+      const hashPassword = await this.hasingService.hash(password);
+      const save = await this.prisma.cmsUser.create({
+        data: {
+          name,
+          email,
+          role,
+          password: hashPassword,
+        },
+      });
+
+      return save;
+    } catch (err) {
+      const pgUniqueViolationErrorCode = '23505';
+      if (err.code == pgUniqueViolationErrorCode) {
+        throw new ConflictException();
+      }
+      throw err;
+    }
   }
 
   findAll() {
