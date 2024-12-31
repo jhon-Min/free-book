@@ -4,11 +4,13 @@ import { CmsLoginDto } from './dto/auth.dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
+import { HashingService } from '../hashing/hashing.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private prismaService: PrismaService,
+    private hashingService: HashingService,
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
@@ -23,6 +25,15 @@ export class AuthenticationService {
 
     if (!cmsUser) {
       throw new UnauthorizedException('Unauthorized User');
+    }
+
+    const isEqual = await this.hashingService.compare(
+      password,
+      cmsUser.password,
+    );
+
+    if (!isEqual) {
+      throw new UnauthorizedException('Credential does not match!');
     }
 
     const accessToken = await this.jwtService.signAsync(
