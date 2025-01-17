@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  ONGOING
+  COMPLETE
+  INCOMPLETE
+}
+
 model CmsUser {
   id        String    @id @default(uuid())
   name      String
@@ -30,4 +36,21 @@ model Genre {
   icon      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Book {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  description String?   @db.Text
+  bookCover   String?   @map("book_cover")
+  bookProfile String?   @map("book_profile")
+  status      Status    @default(ONGOING)
+  isHot       Boolean   @default(false) @map("is_hot")
+  isNew       Boolean   @default(false) @map("is_new")
+  deletedAt   DateTime? @db.Timestamp
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([name])
+  @@index([status])
 }
