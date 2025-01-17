@@ -1,0 +1,16 @@
+services:
+  api:
+    container_name: tb-book-api
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    command: node dist/main.js
+    restart: always
+    ports:
+      - 4969:4969
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
