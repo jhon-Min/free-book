@@ -35,21 +35,22 @@ export class BooksService {
     };
   }
 
-  async createBook(createBookDto: CreateBookDto, image: Express.Multer.File) {
-    const { name, status, is_hot, is_new, description } = createBookDto;
+  async createBook(createBookDto: CreateBookDto) {
+    const { name, status, is_hot, is_new, description, genres, book_profile } =
+      createBookDto;
 
-    const imgPath = await imageUpload(image, 'image/book-pf');
-
-    return await this.prismaService.book.create({
+    const book = await this.prismaService.book.create({
       data: {
         name,
         description,
         isHot: is_hot,
         isNew: is_new,
         status,
-        bookProfile: imgPath,
+        bookProfile: book_profile,
       },
     });
+
+    return book;
   }
 
   async updateBook(

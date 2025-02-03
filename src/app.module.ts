@@ -7,10 +7,12 @@ import { GenresModule } from './genres/genres.module';
 import { BooksModule } from './books/books.module';
 import { CmsUserSeeder } from './seeds/cmsuser.seeder';
 import { HomeModule } from './home/home.module';
+import { FileuploadController } from './fileupload/fileupload.controller';
+import { FileuploadService } from './fileupload/fileupload.service';
 
 @Module({
   imports: [CmsUserModule, IamModule, GenresModule, BooksModule, HomeModule],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, FileuploadController],
+  providers: [AppService, FileuploadService],
 })
 export class AppModule {}

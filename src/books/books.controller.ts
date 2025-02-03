@@ -47,7 +47,7 @@ export class BooksController {
     @Body() createBookDto: CreateBookDto,
     @UploadedFile() book_profile: Express.Multer.File,
   ) {
-    return this.bookService.createBook(createBookDto, book_profile);
+    return this.bookService.createBook(createBookDto);
   }
 
   @Put(':id')

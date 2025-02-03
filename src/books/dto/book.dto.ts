@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateBookDto {
   @IsNotEmpty()
@@ -9,6 +15,13 @@ export class CreateBookDto {
 
   @IsNotEmpty()
   status: any;
+
+  @IsNotEmpty()
+  @IsArray()
+  genres: string[];
+
+  @IsNotEmpty()
+  book_profile: string;
 
   @IsOptional()
   is_hot: boolean;
