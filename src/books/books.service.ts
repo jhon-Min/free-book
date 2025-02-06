@@ -20,6 +20,7 @@ export class BooksService {
       skip,
       take: +perPage,
       orderBy: { createdAt: 'desc' },
+      include: { genres: true },
     });
 
     const total = await this.prismaService.book.count();
@@ -47,6 +48,11 @@ export class BooksService {
         isNew: is_new,
         status,
         bookProfile: book_profile,
+        genres: {
+          connect: genres.map((x) => ({
+            id: x,
+          })),
+        },
       },
     });
 

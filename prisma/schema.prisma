@@ -36,6 +36,8 @@ model Genre {
   icon      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  books Book[]
 }
 
 model Book {
@@ -50,6 +52,8 @@ model Book {
   deletedAt   DateTime? @db.Timestamp
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  genres Genre[]
 
   @@index([name])
   @@index([status])
