@@ -51,32 +51,8 @@ export class BooksController {
   }
 
   @Put(':id')
-  @UseInterceptors(
-    FileInterceptor('book_profile', {
-      limits: { fileSize: 15 * 1024 * 1024 },
-      fileFilter: (req, file, callback) => {
-        const allowedTypes = /\/(jpg|jpeg|png)$/;
-
-        if (!file.mimetype.match(allowedTypes)) {
-          return callback(
-            new BadRequestException(
-              'Only JPG, JPEG, and PNG files are allowed!',
-            ),
-            false,
-          );
-        }
-
-        callback(null, true);
-      },
-    }),
-  )
-  updateBook(
-    @Param('id') id: string,
-    @Body() createBookDto: CreateBookDto,
-    @UploadedFile() book_profile: Express.Multer.File,
-  ) {
-    console.log(book_profile);
-    return this.bookService.updateBook(id, createBookDto, book_profile);
+  updateBook(@Param('id') id: string, @Body() createBookDto: CreateBookDto) {
+    return this.bookService.updateBook(id, createBookDto);
   }
 
   @Delete(':id')

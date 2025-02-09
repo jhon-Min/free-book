@@ -59,12 +59,9 @@ export class BooksService {
     return book;
   }
 
-  async updateBook(
-    id,
-    updateBookDto: CreateBookDto,
-    image: Express.Multer.File,
-  ) {
-    const { name, status, is_hot, is_new, description } = updateBookDto;
+  async updateBook(id, updateBookDto: CreateBookDto) {
+    const { name, status, is_hot, is_new, genres, description, book_profile } =
+      updateBookDto;
 
     const book = await this.prismaService.book.findUnique({ where: { id } });
 
@@ -72,8 +69,7 @@ export class BooksService {
       throw new NotFoundException(` ID "${id}" not found`);
     }
 
-    let imgPath = book.bookProfile;
-    if (image) {
+    if (book.bookProfile) {
       try {
         const relativePath = book.bookProfile.replace(process.env.APP_URL, '');
         const oldImgPath = path.join(__dirname, `../../`, relativePath);
@@ -81,12 +77,21 @@ export class BooksService {
         if (fs.existsSync(oldImgPath)) {
           fs.unlinkSync(oldImgPath);
         }
-
-        imgPath = await imageUpload(image, 'image/book-pf');
       } catch (error) {
         throw new BadRequestException(error);
       }
     }
+
+    const currentGenres = await this.prismaService.book.findUnique({
+      where: { id },
+      select: {
+        genres: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
 
     return this.prismaService.book.update({
       where: { id },
@@ -96,7 +101,15 @@ export class BooksService {
         isHot: is_hot,
         isNew: is_new,
         status,
-        bookProfile: imgPath,
+        bookProfile: book_profile,
+        genres: {
+          disconnect: currentGenres.genres.map((genre) => ({
+            id: genre.id,
+          })),
+          connect: genres.map((x) => ({
+            id: x,
+          })),
+        },
       },
     });
   }
