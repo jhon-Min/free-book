@@ -9,9 +9,10 @@ import { CmsUserSeeder } from './seeds/cmsuser.seeder';
 import { HomeModule } from './home/home.module';
 import { FileuploadController } from './fileupload/fileupload.controller';
 import { FileuploadService } from './fileupload/fileupload.service';
+import { ChapterModule } from './chapter/chapter.module';
 
 @Module({
-  imports: [CmsUserModule, IamModule, GenresModule, BooksModule, HomeModule],
+  imports: [CmsUserModule, IamModule, GenresModule, BooksModule, HomeModule, ChapterModule],
   controllers: [AppController, FileuploadController],
   providers: [AppService, FileuploadService],
 })

@@ -15,4 +15,14 @@ async function imageUpload(file: any, uploadDir: string): Promise<string> {
   return url;
 }
 
-export { imageUpload };
+function deleteImage(url) {
+  const relativePath = url.replace(process.env.APP_URL, '');
+  const imgPath = path.join(__dirname, `../../`, relativePath);
+  if (fs.existsSync(imgPath)) {
+    fs.unlinkSync(imgPath);
+    console.log('deleted!');
+  }
+  return true;
+}
+
+export { imageUpload, deleteImage };

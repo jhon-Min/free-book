@@ -58,3 +58,16 @@ model Book {
   @@index([name])
   @@index([status])
 }
+
+model Chapter {
+  id        String   @id @default(uuid())
+  name      String
+  no        Int
+  isPremium Boolean  @default(false)
+  coin      Decimal  @default(0)
+  images    String[]
+  bookId    String
+  seasonId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
