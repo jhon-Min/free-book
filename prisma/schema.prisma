@@ -53,7 +53,8 @@ model Book {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  genres Genre[]
+  genres  Genre[]
+  chapter Chapter[]
 
   @@index([name])
   @@index([status])
@@ -66,8 +67,9 @@ model Chapter {
   isPremium Boolean  @default(false)
   coin      Decimal  @default(0)
   images    String[]
-  bookId    String
+  bookId    String   @db.Uuid
   seasonId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  book      Book     @relation(fields: [bookId], references: [id])
 }

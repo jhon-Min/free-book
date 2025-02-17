@@ -16,14 +16,22 @@ export class BooksService {
   async index(page: number, perPage: number) {
     const skip = (page - 1) * perPage;
 
-    const data = await this.prismaService.book.findMany({
-      skip,
-      take: +perPage,
-      orderBy: { createdAt: 'desc' },
-      include: { genres: true },
-    });
-
-    const total = await this.prismaService.book.count();
+    const [data, total] = await Promise.all([
+      this.prismaService.book.findMany({
+        skip,
+        take: +perPage,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          genres: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      }),
+      this.prismaService.book.count(),
+    ]);
 
     return {
       data,
@@ -55,6 +63,35 @@ export class BooksService {
         },
       },
     });
+
+    return book;
+  }
+
+  async detail(id: string) {
+    const book = await this.prismaService.book.findUnique({
+      where: { id },
+      include: {
+        genres: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        chapter: {
+          select: {
+            id: true,
+            name: true,
+            no: true,
+            isPremium: true,
+            coin: true,
+          },
+        },
+      },
+    });
+
+    if (!book) {
+      throw new NotFoundException('Book not found!');
+    }
 
     return book;
   }
