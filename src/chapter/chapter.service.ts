@@ -28,6 +28,18 @@ export class ChapterService {
     };
   }
 
+  async detail(id: string) {
+    const chapter = await this.prismaService.chapter.findUnique({
+      where: { id },
+    });
+
+    if (!chapter) {
+      throw new NotFoundException('Chapter not found!');
+    }
+
+    return chapter;
+  }
+
   async create(
     createChapterDto: CreateChapterDto,
     images: Express.Multer.File[],

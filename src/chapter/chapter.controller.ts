@@ -24,6 +24,11 @@ export class ChapterController {
     return this.chapterService.index(+page, +perPage);
   }
 
+  @Get(':id')
+  detail(@Param('id') id: string) {
+    return this.chapterService.detail(id);
+  }
+
   @Post()
   @UseInterceptors(
     FilesInterceptor('images', 100, {
