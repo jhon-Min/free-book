@@ -29,6 +29,11 @@ export class ChapterController {
     return this.chapterService.detail(id);
   }
 
+  @Get(':bookId/book')
+  chaptersWithBookId(@Param('bookId') bookId: string) {
+    return this.chapterService.chaptersWithBookId(bookId);
+  }
+
   @Post()
   @UseInterceptors(
     FilesInterceptor('images', 100, {

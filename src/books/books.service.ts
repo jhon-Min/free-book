@@ -77,15 +77,15 @@ export class BooksService {
             name: true,
           },
         },
-        chapter: {
-          select: {
-            id: true,
-            name: true,
-            no: true,
-            isPremium: true,
-            coin: true,
-          },
-        },
+        // chapter: {
+        //   select: {
+        //     id: true,
+        //     name: true,
+        //     no: true,
+        //     isPremium: true,
+        //     coin: true,
+        //   },
+        // },
       },
     });
 

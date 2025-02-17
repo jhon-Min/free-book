@@ -33,7 +33,13 @@ export class HomeController {
 
   @Auth(AuthType.None)
   @Get('chapters/:id')
-  chapterWithBookId(@Param('id') id: string) {
+  chapterDetail(@Param('id') id: string) {
     return this.chapterService.detail(id);
+  }
+
+  @Auth(AuthType.None)
+  @Get('chapters/:id/book')
+  chaptersWithBookId(@Param('id') id: string) {
+    return this.chapterService.chaptersWithBookId(id);
   }
 }

@@ -40,6 +40,27 @@ export class ChapterService {
     return chapter;
   }
 
+  async chaptersWithBookId(bookId: string) {
+    const chapters = await this.prismaService.chapter.findMany({
+      where: { bookId: bookId },
+      select: {
+        id: true,
+        name: true,
+        isPremium: true,
+        coin: true,
+        no: true,
+        bookId: true,
+      },
+      orderBy: { no: 'asc' },
+    });
+
+    if (!chapters) {
+      throw new NotFoundException('Chapter not found!');
+    }
+
+    return chapters;
+  }
+
   async create(
     createChapterDto: CreateChapterDto,
     images: Express.Multer.File[],
