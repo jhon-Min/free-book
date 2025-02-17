@@ -9,13 +9,14 @@ export class ChapterService {
 
   async index(page: number, perPage: number) {
     const skip = (page - 1) * perPage;
-    const data = await this.prismaService.chapter.findMany({
-      skip,
-      take: +perPage,
-      orderBy: { createdAt: 'desc' },
-    });
-
-    const total = await this.prismaService.chapter.count();
+    const [data, total] = await Promise.all([
+      this.prismaService.chapter.findMany({
+        skip,
+        take: +perPage,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prismaService.chapter.count(),
+    ]);
 
     return {
       data,
