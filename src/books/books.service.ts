@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -152,22 +153,34 @@ export class BooksService {
   }
 
   async destroy(id: string) {
-    const book = await this.prismaService.book.findUnique({ where: { id } });
+    const book = await this.prismaService.book.findUnique({
+      where: { id },
+      include: { chapter: true },
+    });
 
     if (!book) {
       throw new NotFoundException(` ID "${id}" not found`);
     }
 
+    if (book.chapter.length > 0) {
+      throw new ForbiddenException(
+        'Cannot delete book with associated chapters',
+      );
+    }
+
     if (book.bookProfile) {
       const relativePath = book.bookProfile.replace(process.env.APP_URL, '');
+
       const imgPath = path.join(__dirname, `../../`, relativePath);
 
       if (fs.existsSync(imgPath)) {
+        console.log('working image delete file');
         fs.unlinkSync(imgPath);
       }
     }
 
     const save = await this.prismaService.book.delete({ where: { id } });
+
     return {
       message: 'success',
       data: save,
