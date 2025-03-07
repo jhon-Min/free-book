@@ -1,10 +1,11 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
-import { CmsLoginDto } from './dto/auth.dto/auth.dto';
+import { CmsLoginDto, EndUserLoginDto } from './dto/auth.dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { HashingService } from '../hashing/hashing.service';
+import { firebaseVerifyToken } from 'src/lib/myHelper';
 
 @Injectable()
 export class AuthenticationService {
@@ -48,5 +49,13 @@ export class AuthenticationService {
     );
 
     return { id: cmsUser.id, email: cmsUser.email, accessToken };
+  }
+
+  async enduserLogin(loginDto: EndUserLoginDto) {
+    console.log('token', loginDto.token);
+    const getVerifyUser = await firebaseVerifyToken(loginDto.token);
+
+    console.log(getVerifyUser);
+    return;
   }
 }

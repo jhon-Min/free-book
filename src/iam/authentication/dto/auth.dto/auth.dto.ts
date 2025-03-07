@@ -8,4 +8,9 @@ export class CmsLoginDto {
   password: string;
 }
 
+export class EndUserLoginDto {
+  @IsNotEmpty()
+  token: string;
+}
+
 export class UserLoginDto {}

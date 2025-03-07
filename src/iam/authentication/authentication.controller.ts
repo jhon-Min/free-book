@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { CmsLoginDto } from './dto/auth.dto/auth.dto';
+import { CmsLoginDto, EndUserLoginDto } from './dto/auth.dto/auth.dto';
 import { Auth } from './decorators/auth.decorator';
 import { AuthType } from './enum/enum-type.enum';
 
@@ -12,5 +12,11 @@ export class AuthenticationController {
   @Post('cms/login')
   async cmsLogin(@Body() cmsLoginDto: CmsLoginDto) {
     return this.authService.cmsLogIn(cmsLoginDto);
+  }
+
+  @Auth(AuthType.None)
+  @Post('api/v1/login')
+  endUserLogin(@Body() loginDto: EndUserLoginDto) {
+    return this.authService.enduserLogin(loginDto);
   }
 }
