@@ -73,3 +73,21 @@ model Chapter {
   updatedAt DateTime @updatedAt
   book      Book     @relation(fields: [bookId], references: [id])
 }
+
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  firebaseId String
+  email      String?  @unique // Unique and nullable
+  phone      String?  @unique // Unique and nullable
+  password   String? // Nullable password
+  image      String? // Nullable image URL
+  isExpire   Boolean  @default(false) // Default false
+  isBan      Boolean  @default(false) // Default false
+  points     Decimal  @default(0.0) // Default 0.0
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([firebaseId])
+  @@index([phone])
+}

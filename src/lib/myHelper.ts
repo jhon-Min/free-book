@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { firebaseAdmin } from './firebase';
+import { UnauthorizedException } from '@nestjs/common';
 
 async function imageUpload(file: any, uploadDir: string): Promise<string> {
   const filename = `${Date.now()}-${file.originalname}`;
@@ -37,7 +38,7 @@ async function firebaseVerifyToken(idToken: string) {
     })
     .catch((error) => {
       console.log(error);
-      // throw new UnauthorizedException('Unauthorized access');
+      throw new UnauthorizedException('Unauthorized access');
     });
 }
 

@@ -52,10 +52,36 @@ export class AuthenticationService {
   }
 
   async enduserLogin(loginDto: EndUserLoginDto) {
-    console.log('token', loginDto.token);
+    // console.log('token', loginDto.token);
     const getVerifyUser = await firebaseVerifyToken(loginDto.token);
+    // console.log('verify', getVerifyUser);
 
-    console.log(getVerifyUser);
-    return;
+    let user = await this.prismaService.user.findFirst({
+      where: { firebaseId: getVerifyUser['uid'] },
+    });
+
+    if (!user) {
+      user = await this.prismaService.user.create({
+        data: {
+          name: getVerifyUser['displayName'],
+          firebaseId: getVerifyUser['uid'],
+          email: getVerifyUser['email'],
+          image: getVerifyUser['photoURL'],
+        },
+      });
+      console.log('New User', user);
+    }
+
+    const accessToken = await this.jwtService.signAsync({
+      sub: user.id,
+      email: user.email,
+    });
+
+    return {
+      accessToken,
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    };
   }
 }
