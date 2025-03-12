@@ -82,6 +82,9 @@ export class AuthenticationService {
       id: user.id,
       email: user.email,
       name: user.name,
+      image: user.image,
+      phone: user.phone,
+      points: user.points,
     };
   }
 }

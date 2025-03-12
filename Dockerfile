@@ -8,6 +8,8 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
 
+COPY --chown=node:node serviceAccountKey.json ./
+
 RUN npm ci
 
 COPY --chown=node:node . .
@@ -24,6 +26,8 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
 
+COPY --chown=node:node serviceAccountKey.json ./
+
 COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
 
 COPY --chown=node:node . .
@@ -36,12 +40,13 @@ RUN npm ci --only=production && npm cache clean --force
 
 USER node
 
-###################
-# PRODUCTION
-###################
+# ###################
+# # PRODUCTION
+# ###################
 
 FROM node:18-alpine As production
 
+COPY --chown=node:node --from=build /usr/src/app/serviceAccountKey.json ./
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 

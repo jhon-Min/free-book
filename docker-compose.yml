@@ -14,9 +14,9 @@ services:
     restart: always
     ports:
       - 4969:4969
-    networks:
-      - myDevNetwork
+    # networks:
+    #   - myDevNetwork
 
-networks:
-  myDevNetwork:
-    external: true
+# networks:
+#   myDevNetwork:
+#     external: true
