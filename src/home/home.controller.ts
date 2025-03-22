@@ -22,7 +22,7 @@ export class HomeController {
   @Auth(AuthType.None)
   @Get('books')
   books() {
-    return this.bookService.index(1, 100);
+    return this.bookService.index(1, 100, '');
   }
 
   @Auth(AuthType.None)

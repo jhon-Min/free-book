@@ -9,18 +9,26 @@ import { CreateBookDto } from './dto/book.dto';
 import { imageUpload } from 'src/lib/myHelper';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class BooksService {
   constructor(private prismaService: PrismaService) {}
 
-  async index(page: number, perPage: number) {
+  async index(page: number, perPage: number, search: string) {
     const skip = (page - 1) * perPage;
+
+    const searchFilter = search
+      ? {
+          name: { contains: search, mode: Prisma.QueryMode.insensitive },
+        }
+      : {};
 
     const [data, total] = await Promise.all([
       this.prismaService.book.findMany({
         skip,
         take: +perPage,
+        where: searchFilter,
         orderBy: { createdAt: 'desc' },
         include: {
           genres: {
@@ -31,7 +39,7 @@ export class BooksService {
           },
         },
       }),
-      this.prismaService.book.count(),
+      this.prismaService.book.count({ where: searchFilter }),
     ]);
 
     return {

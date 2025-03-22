@@ -20,8 +20,12 @@ export class BooksController {
   constructor(private readonly bookService: BooksService) {}
 
   @Get()
-  index(@Query('page') page: string, @Query('perPage') perPage: string) {
-    return this.bookService.index(+page, +perPage);
+  index(
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
+    @Query('search') search: string,
+  ) {
+    return this.bookService.index(+page, +perPage, search);
   }
 
   @Post()

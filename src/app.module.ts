@@ -10,9 +10,10 @@ import { HomeModule } from './home/home.module';
 import { FileuploadController } from './fileupload/fileupload.controller';
 import { FileuploadService } from './fileupload/fileupload.service';
 import { ChapterModule } from './chapter/chapter.module';
+import { EnduserModule } from './enduser/enduser.module';
 
 @Module({
-  imports: [CmsUserModule, IamModule, GenresModule, BooksModule, HomeModule, ChapterModule],
+  imports: [CmsUserModule, IamModule, GenresModule, BooksModule, HomeModule, ChapterModule, EnduserModule],
   controllers: [AppController, FileuploadController],
   providers: [AppService, FileuploadService],
 })
