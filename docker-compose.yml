@@ -10,7 +10,8 @@ services:
       - .:/usr/src/app
     env_file:
       - .env
-    command: node dist/main.js
+    command: >
+      sh -c "npm run build && node dist/main.js"
     restart: always
     ports:
       - 4969:4969
