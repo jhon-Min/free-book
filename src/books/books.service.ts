@@ -20,7 +20,7 @@ export class BooksService {
 
     const searchFilter = search
       ? {
-          name: { contains: search, mode: Prisma.QueryMode.insensitive },
+          name: { contains: search, mode: 'insensitive' },
         }
       : {};
 
@@ -28,7 +28,9 @@ export class BooksService {
       this.prismaService.book.findMany({
         skip,
         take: +perPage,
-        where: searchFilter,
+        where: {
+          name: { contains: search, mode: 'insensitive' },
+        },
         orderBy: { createdAt: 'desc' },
         include: {
           genres: {
@@ -39,7 +41,11 @@ export class BooksService {
           },
         },
       }),
-      this.prismaService.book.count({ where: searchFilter }),
+      this.prismaService.book.count({
+        where: {
+          name: { contains: search, mode: 'insensitive' },
+        },
+      }),
     ]);
 
     return {

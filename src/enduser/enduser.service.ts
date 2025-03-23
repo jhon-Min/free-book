@@ -9,20 +9,22 @@ export class EnduserService {
   async index(page: number, perPage: number, search: string) {
     const skip = (page - 1) * perPage;
 
-    const searchFilter = search
-      ? {
-          email: { contains: search, mode: Prisma.QueryMode.insensitive },
-        }
-      : {};
+    // const searchFilter = search
+    //   ? {
+    //       email: { contains: search, mode: Prisma.QueryMode.insensitive },
+    //     }
+    //   : {};
 
     const [data, total] = await Promise.all([
       this.prismaService.user.findMany({
         skip,
         take: +perPage,
-        where: searchFilter,
+        where: { email: { contains: search, mode: 'insensitive' } },
         orderBy: { createdAt: 'desc' },
       }),
-      this.prismaService.user.count({ where: searchFilter }),
+      this.prismaService.user.count({
+        where: { email: { contains: search, mode: 'insensitive' } },
+      }),
     ]);
 
     return {
