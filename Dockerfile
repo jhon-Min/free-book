@@ -13,9 +13,10 @@ RUN npm ci
 
 COPY --chown=node:node . .
 
-USER node
+# Run Prisma Generate before switching user
+RUN npx prisma generate
 
-RUN npx prisma generate # ✅ Generate Prisma Client
+USER node  # 🔹 Only switch to node user AFTER prisma generate
 
 ###################
 # BUILD FOR PRODUCTION
@@ -33,11 +34,13 @@ COPY --chown=node:node . .
 
 ENV MY_VARIABLE=${MY_VARIABLE}
 
-RUN npx prisma generate # ✅ Generate Prisma Client in build stage
+# Run Prisma Generate before switching user
+RUN npx prisma generate
+
 RUN npm run build
 RUN npm ci --only=production && npm cache clean --force
 
-USER node
+USER node  # 🔹 Only switch to node user AFTER prisma generate
 
 ###################
 # PRODUCTION
